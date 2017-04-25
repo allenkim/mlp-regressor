@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+
+# Custom Folders
+/unparsed_data/
