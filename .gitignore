@@ -3,3 +3,6 @@ __pycache__/
 
 # Custom Folders
 /unparsed_data/
+
+# Jetbrains Stuff
+*.idea/
