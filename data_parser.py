@@ -7,7 +7,7 @@ CSV_FILE = "prices.csv"
 RAW_DATA_DIR = "unparsed_data"
 
 
-def parse_data(path: str, company_symbol: [], target_file: str):
+def parse_data(path: str, company_symbol: str, target_file: str):
     with open(target_file, "a") as file:
         writer = csv.writer(file)
         writer.writerow(["SYMBOL", "CLOSING PRICE", "DAY", "DATE"])
@@ -19,7 +19,7 @@ def parse_data(path: str, company_symbol: [], target_file: str):
                 write_to_csv(file_path, company_symbol, target_file)
 
 
-def write_to_csv(read_file: str, company_symbol, file_name: str):
+def write_to_csv(read_file: str, company_symbol: str, file_name: str):
     csv_to_read = csv.reader(open(read_file, newline=""))
     for row in csv_to_read:
         # Skip the first row in the csv file
