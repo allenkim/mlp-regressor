@@ -1,4 +1,5 @@
 from os.path import join
+import csv
 
 
 class FileManager(object):
@@ -18,17 +19,27 @@ class FileManager(object):
         return file
 
     def close_file(self):
+        """
+        Closes the file that was opened in the managed_file.
+        :return: None
+        """
         try:
             self.managed_file.close()
         except FileExistsError:
             print("File not found!")
 
 
-class Yielder(object):
+class DataYielder(object):
     def __init__(self):
         pass
-    pass
 
-
-if __name__ == "__main__":
-    pass
+    @staticmethod
+    def get_stock_data(csv_file):
+        """
+        :param csv_file: The csv file to read.
+        :return: An array of closing price data.
+        """
+        for row in csv_file:
+            if "symbol" in row:
+                continue
+            pass
