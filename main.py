@@ -13,7 +13,8 @@ def main():
     file_manager.open_file(at_t_path)
 
     at_t_data = DataYielder.get_stock_data(file_manager.managed_file)
+    print(at_t_data)
 
 
 if __name__ == "__main__":
-    pass
+    main()

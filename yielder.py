@@ -39,7 +39,12 @@ class DataYielder(object):
         :param csv_file: The csv file to read.
         :return: An array of closing price data.
         """
+        # Stock data should contain the a tuple of day numbers and its
+        stock_data = []
         for row in csv_file:
             if "symbol" in row:
                 continue
-            pass
+            else:
+                stock_data.append(row)
+
+        return stock_data
