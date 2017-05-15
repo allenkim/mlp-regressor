@@ -43,7 +43,10 @@ class DataYielder(object):
                 continue
             else:
                 split_row = row.split(",")
-                stock_data.append(split_row[1])
+                if len(split_row) > 1:
+                    stock_data.append(split_row[1])
+                else:
+                    print(split_row)
         return stock_data
 
     @staticmethod
