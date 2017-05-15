@@ -38,15 +38,14 @@ class DataYielder(object):
         """
         # Stock data should contain the a tuple of day numbers and its
         stock_data = []
+        # print(csv_file)
         for row in csv_file:
-            if "symbol" in row:
+            if "SYMBOL" in row:
                 continue
             else:
                 split_row = row.split(",")
                 if len(split_row) > 1:
-                    stock_data.append(split_row[1])
-                else:
-                    print(split_row)
+                    stock_data.append(float(split_row[1]))
         return stock_data
 
     @staticmethod
