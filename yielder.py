@@ -30,14 +30,11 @@ class FileManager(object):
 
 
 class DataYielder(object):
-    def __init__(self):
-        pass
-
     @staticmethod
     def get_stock_data(csv_file):
         """
         :param csv_file: The csv file to read.
-        :return: An array of closing price data.
+        :return: An array of data non repeated.
         """
         # Stock data should contain the a tuple of day numbers and its
         stock_data = []
@@ -45,6 +42,27 @@ class DataYielder(object):
             if "symbol" in row:
                 continue
             else:
-                stock_data.append(row)
-
+                split_row = row.split(",")
+                stock_data.append(split_row[1])
         return stock_data
+
+    @staticmethod
+    def get_structured_data(data):
+        # A matrix of structured data
+        structured_data = []
+        for row in range(0, len(data)):
+            # Create a new array
+            sub_data = []
+            current_row = data[row]
+            sub_data.append(current_row)
+            for index in range(1, 5):
+                try:
+                    sub_data.append(data[index + row])
+                except IndexError:
+                    # Reaching the end of the array
+                    # structured_data.append(sub_data)
+                    continue
+            if len(sub_data) < 5:
+                continue
+            structured_data.append(sub_data)
+        return structured_data
