@@ -36,7 +36,7 @@ def pack_data():
     return at_t_structured_data, t_mobile_structured_data, sprint_structured_data, verizon_structured_data
 
 
-def rate(in_data: [[]]):
+def rate(in_data: [[]], num_hidden: int):
     num_samples = len(in_data) - 1
     train_x = []
     train_y = []
@@ -44,23 +44,22 @@ def rate(in_data: [[]]):
     test_y = []
 
     for i in range(num_samples):
-        rand_num = random()
-        if rand_num < 0.67:
+        if i < 19 * num_samples / 20:
             train_x.append(in_data[i])
             train_y.append(in_data[i + 1])
         else:
             test_x.append(in_data[i])
             test_y.append(in_data[i + 1])
-    print("Train X: {}, TEST X: {}".format(len(train_x), len(test_x)))
+    #print("Train X: {}, TEST X: {}".format(len(train_x), len(test_x)))
 
-    reg = MLPRegressor(hidden_layer_sizes=(15, 15), max_iter=1000000)
-    print("Start fit...")
+    reg = MLPRegressor(hidden_layer_sizes=(num_hidden, num_hidden), max_iter=1000000)
+    #print("Start fit...")
     reg.fit(train_x, train_y)
-    print("Finished...")
-    return reg, reg.score(test_x, test_y)
+    #print("Finished...")
+    return reg.score(test_x, test_y)
 
 
-def train(in_data: [[]]):
+def train(in_data: [[]], num_hidden: int):
     num_samples = len(in_data) - 1
     train_x = []
     train_y = []
@@ -69,7 +68,7 @@ def train(in_data: [[]]):
         train_x.append(in_data[i])
         train_y.append(in_data[i + 1])
 
-    reg = MLPRegressor(hidden_layer_sizes=(15, 15), max_iter=1000000)
+    reg = MLPRegressor(hidden_layer_sizes=(num_hidden, num_hidden), max_iter=1000000)
     reg.fit(np.array(train_x), np.array(train_y))
     return reg
 
@@ -82,10 +81,40 @@ def average_predict(num_of_runs: int, prices: [[]]):
             print(i)
     return total / num_of_runs
 
+def best_hidden_number(prices: [[]], num_avg: int):
+    best_h = 2
+    best_score = 0
+    for _ in range(num_avg):
+        best_score += rate(prices,best_h)
+    best_score /= num_avg
+    current_h = 3
+    print("Best Hidden Number So Far: {}".format(best_h))
+    print(best_score)
+    while current_h < 60:
+        print("Testing {}".format(current_h))
+        current_score = 0
+        for _ in range(num_avg):
+            current_score += rate(prices,best_h)
+        current_score /= num_avg
+        print(current_score)
+        if current_score > best_score:
+            best_score = current_score
+            best_h = current_h
+            print("Best Hidden Number So Far: {}".format(best_h))
+        current_h += 1
 
 def main():
     # TODO: Neural network on the data
     at_t, t_mobile, sprint, verizon = pack_data()
+    at_t_score = rate(at_t, 100)
+    t_mobile_score = rate(t_mobile, 16)
+    sprint_score = rate(sprint, 25)
+    verizon_score = rate(verizon, 11)
+    print("AT&T: {}\nT-Mobile: {}\nSprint: {}\nVerizon: {}".format(at_t_score, 
+                                                                   t_mobile_score, 
+                                                                   sprint_score, 
+                                                                   verizon_score))
+    """
     at_t_reg = train(at_t)
     t_mobile_reg = train(t_mobile)
     sprint_reg = train(sprint)
@@ -102,9 +131,7 @@ def main():
 
     verizon_predict = average_predict(2000, verizon)
     print("vz", verizon_predict)
-    # [[ 38.01167605  38.06460258  38.06191534  38.05008283  38.09149562]]
-    # [[ 38.04889345  38.02461876  38.02900608  38.07312175  38.06090416]]
-
+    """
 
 if __name__ == "__main__":
     main()
