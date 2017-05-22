@@ -1,6 +1,7 @@
 from yielder import FileManager, DataYielder
 from sklearn.neural_network import MLPRegressor
 from random import random
+import numpy as np
 
 
 def pack_data():
@@ -56,25 +57,53 @@ def rate(in_data: [[]]):
     print("Start fit...")
     reg.fit(train_x, train_y)
     print("Finished...")
-    return reg.score(test_x, test_y)
+    return reg, reg.score(test_x, test_y)
 
 
-def test():
-    pass
+def train(in_data: [[]]):
+    num_samples = len(in_data) - 1
+    train_x = []
+    train_y = []
+
+    for i in range(num_samples):
+        train_x.append(in_data[i])
+        train_y.append(in_data[i + 1])
+
+    reg = MLPRegressor(hidden_layer_sizes=(15, 15), max_iter=1000000)
+    reg.fit(np.array(train_x), np.array(train_y))
+    return reg
+
+def average_predict(num_of_runs: int, prices: [[]]):
+    total = 0
+    for i in range(num_of_runs):
+        reg = train(prices)
+        total += reg.predict(np.array(prices[-1]).reshape(1, -1))
+        if i % 50 == 0:
+            print(i)
+    return total / num_of_runs
 
 
 def main():
     # TODO: Neural network on the data
     at_t, t_mobile, sprint, verizon = pack_data()
-    at_t_score = rate(at_t)
-    t_mobile_score = rate(t_mobile)
-    sprint_score = rate(sprint)
-    verizon_score = rate(verizon)
+    at_t_reg = train(at_t)
+    t_mobile_reg = train(t_mobile)
+    sprint_reg = train(sprint)
+    verizon_reg = train(verizon)
 
-    print("AT&T: {}, T Mobile: {}, Sprint: {}, Verizon: {}".format(at_t_score,
-                                                                   t_mobile_score,
-                                                                   sprint_score,
-                                                                   verizon_score))
+    at_t_predict = average_predict(1000, at_t)
+    print("at_t", at_t_predict)
+
+    t_mobile_predict = average_predict(2000, t_mobile)
+    print("tmobile", t_mobile_predict)
+
+    sprint_predict = average_predict(2000, sprint)
+    print("sprint", sprint_predict)
+
+    verizon_predict = average_predict(2000, verizon)
+    print("vz", verizon_predict)
+    # [[ 38.01167605  38.06460258  38.06191534  38.05008283  38.09149562]]
+    # [[ 38.04889345  38.02461876  38.02900608  38.07312175  38.06090416]]
 
 
 if __name__ == "__main__":
