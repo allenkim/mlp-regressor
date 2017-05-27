@@ -72,13 +72,13 @@ def train(in_data: [[]], num_hidden: int):
     reg.fit(np.array(train_x), np.array(train_y))
     return reg
 
-def average_predict(num_of_runs: int, prices: [[]]):
+def average_predict(num_of_runs: int, prices: [[]], num_hidden: int):
     total = 0
     for i in range(num_of_runs):
-        reg = train(prices)
+        reg = train(prices, num_hidden)
         total += reg.predict(np.array(prices[-1]).reshape(1, -1))
-        if i % 50 == 0:
-            print(i)
+        if i % 10 == 0:
+            print("Number of runs: {}".format(i))
     return total / num_of_runs
 
 def best_hidden_number(prices: [[]], num_avg: int):
@@ -106,6 +106,7 @@ def best_hidden_number(prices: [[]], num_avg: int):
 def main():
     # TODO: Neural network on the data
     at_t, t_mobile, sprint, verizon = pack_data()
+    """
     at_t_score = rate(at_t, 100)
     t_mobile_score = rate(t_mobile, 16)
     sprint_score = rate(sprint, 25)
@@ -114,24 +115,23 @@ def main():
                                                                    t_mobile_score, 
                                                                    sprint_score, 
                                                                    verizon_score))
+    at_t_reg = train(at_t,100)
+    t_mobile_reg = train(t_mobile,16)
+    sprint_reg = train(sprint,25)
+    verizon_reg = train(verizon,11)
     """
-    at_t_reg = train(at_t)
-    t_mobile_reg = train(t_mobile)
-    sprint_reg = train(sprint)
-    verizon_reg = train(verizon)
 
-    at_t_predict = average_predict(1000, at_t)
+    at_t_predict = average_predict(100, at_t, 100)
     print("at_t", at_t_predict)
 
-    t_mobile_predict = average_predict(2000, t_mobile)
+    t_mobile_predict = average_predict(100, t_mobile, 16)
     print("tmobile", t_mobile_predict)
 
-    sprint_predict = average_predict(2000, sprint)
+    sprint_predict = average_predict(100, sprint, 25)
     print("sprint", sprint_predict)
 
-    verizon_predict = average_predict(2000, verizon)
+    verizon_predict = average_predict(100, verizon, 11)
     print("vz", verizon_predict)
-    """
 
 if __name__ == "__main__":
     main()
