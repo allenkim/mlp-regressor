@@ -106,7 +106,6 @@ def best_hidden_number(prices: [[]], num_avg: int):
 def main():
     # TODO: Neural network on the data
     at_t, t_mobile, sprint, verizon = pack_data()
-    """
     at_t_score = rate(at_t, 100)
     t_mobile_score = rate(t_mobile, 16)
     sprint_score = rate(sprint, 25)
@@ -115,11 +114,11 @@ def main():
                                                                    t_mobile_score, 
                                                                    sprint_score, 
                                                                    verizon_score))
+    """
     at_t_reg = train(at_t,100)
     t_mobile_reg = train(t_mobile,16)
     sprint_reg = train(sprint,25)
     verizon_reg = train(verizon,11)
-    """
 
     at_t_predict = average_predict(100, at_t, 100)
     print("at_t", at_t_predict)
@@ -132,6 +131,7 @@ def main():
 
     verizon_predict = average_predict(100, verizon, 11)
     print("vz", verizon_predict)
+    """
 
 if __name__ == "__main__":
     main()
